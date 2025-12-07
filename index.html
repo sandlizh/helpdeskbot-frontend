@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HelpDeskBot – Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>HelpDeskBot</h1>
+      <p class="subtitle">Student Helpdesk & Assignment Assistant</p>
+    </header>
+
+    <main class="card">
+      <h2>Login</h2>
+
+      <form id="login-form">
+        <label>Email</label>
+        <input id="email" type="email" required />
+
+        <label>Password</label>
+        <input id="password" type="password" required />
+
+        <button type="submit">Login</button>
+      </form>
+
+      <p id="error" class="error" style="display:none;"></p>
+
+      <p style="margin-top:12px; font-size:0.85rem;">
+        No account yet?
+        <a href="register.html">Create one here</a>
+      </p>
+    </main>
+
+    <footer class="footer">
+      © 2025 HelpDeskBot
+    </footer>
+  </div>
+
+  <script>
+    const API_BASE = "https://helpdeskbot-backend.onrender.com";
+    const LOGIN_ENDPOINT = "/api/login";
+
+    const form = document.getElementById("login-form");
+    const errorBox = document.getElementById("error");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.style.display = "none";
+
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        const res = await fetch(API_BASE + LOGIN_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorBox.textContent = data.error || "Login failed";
+          errorBox.style.display = "block";
+          return;
+        }
+
+        localStorage.setItem("helpdeskbot_email", email);
+        window.location.href = "chatbot.html";
+
+      } catch {
+        errorBox.textContent = "Server connection error";
+        errorBox.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>

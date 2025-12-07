@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HelpDeskBot</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>HelpDeskBot</h1>
+    </header>
+
+    <main class="main-chat">
+      <section class="panel">
+        <div id="user-email"></div>
+        <h2>This Week</h2>
+        <p id="summary-text">Loading...</p>
+      </section>
+
+      <section class="panel">
+        <h2>Chatbot</h2>
+        <p>Ask the bot about Wi-Fi, VPN, passwords, or “How many assignments do I have this week?”</p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      © 2025 HelpDeskBot
+    </footer>
+  </div>
+
+  <script>
+    const API_BASE = "https://helpdeskbot-backend.onrender.com";
+    const ASSIGNMENTS_ENDPOINT = "/api/assignments/week";
+
+    const email = localStorage.getItem("helpdeskbot_email");
+
+    if (!email) {
+      window.location.href = "index.html";
+    }
+
+    document.getElementById("user-email").textContent = "Logged in as: " + email;
+
+    async function loadAssignments() {
+      try {
+        const res = await fetch(API_BASE + ASSIGNMENTS_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || typeof data.assignments_this_week === "undefined") {
+          document.getElementById("summary-text").textContent =
+            "Could not load your assignments for this week.";
+          return;
+        }
+
+        document.getElementById("summary-text").textContent =
+          "You have " + data.assignments_this_week + " assignments this week.";
+      } catch (err) {
+        console.error("Error loading assignments:", err);
+        document.getElementById("summary-text").textContent =
+          "Error connecting to server";
+      }
+    }
+
+    loadAssignments();
+
+    // Pass logged-in email into Botpress
+    window.botpressWebchat = window.botpressWebchat || {};
+    window.botpressWebchat.externalId = email;
+    window.botpressWebchat.metadata = { email };
+  </script>
+
+  <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
+  <script>
+    window.botpressWebchat.init({
+      configUrl: "https://files.bpcontent.cloud/2025/12/06/21/20251206213533-W4U5AZKF.json"
+    });
+  </script>
+</body>
+</html>
