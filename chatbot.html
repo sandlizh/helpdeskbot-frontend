@@ -21,7 +21,7 @@
 
       <section class="panel">
         <h2>Chatbot</h2>
-        <p>Ask the bot about Wi-Fi, VPN, passwords, or “How many assignments do I have this week?”</p>
+        <p>Ask the bot about Wi-Fi, VPN, passwords, or: “How many assignments do I have this week?”</p>
       </section>
     </main>
 
@@ -47,7 +47,7 @@
         const res = await fetch(API_BASE + ASSIGNMENTS_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email: email })
         });
 
         const data = await res.json();
@@ -69,12 +69,13 @@
 
     loadAssignments();
 
-    // Pass logged-in email into Botpress
+    // Pass logged-in email to Botpress
     window.botpressWebchat = window.botpressWebchat || {};
     window.botpressWebchat.externalId = email;
-    window.botpressWebchat.metadata = { email };
+    window.botpressWebchat.metadata = { email: email };
   </script>
 
+  <!-- Botpress webchat -->
   <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
   <script>
     window.botpressWebchat.init({
