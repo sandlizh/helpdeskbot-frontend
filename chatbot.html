@@ -25,6 +25,8 @@
     </footer>
   </div>
 
+  <script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>
+
   <script>
     const email = localStorage.getItem("helpdeskbot_email");
 
@@ -37,12 +39,15 @@
       badge.textContent = "Logged in as: " + email;
     }
 
-    window.botpressWebchat = window.botpressWebchat || {};
-    window.botpressWebchat.externalId = email;
-    window.botpressWebchat.metadata = { email: email };
+    window.botpress.on('webchat:initialized', () => {
+      window.botpress.updateUser({
+        data: {
+          email: email
+        }
+      });
+    });
   </script>
 
-  <script src="https://cdn.botpress.cloud/webchat/v3.4/inject.js"></script>
   <script src="https://files.bpcontent.cloud/2025/12/06/21/20251206213532-KGB6HISI.js" defer></script>
 </body>
 </html>
