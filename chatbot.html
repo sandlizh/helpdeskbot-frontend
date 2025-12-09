@@ -25,6 +25,7 @@
     </footer>
   </div>
 
+  <!-- 1) Read login info and show badge -->
   <script>
     const email = localStorage.getItem("helpdeskbot_email");
 
@@ -38,11 +39,11 @@
     }
   </script>
 
-  <!-- Botpress webchat scripts from your bot -->
+  <!-- 2) Botpress webchat scripts -->
   <script src="https://cdn.botpress.cloud/webchat/v3.4/inject.js"></script>
   <script src="https://files.bpcontent.cloud/2025/12/06/21/20251206213532-KGB6HISI.js" defer></script>
 
-  <!-- Force-attach the email to the Botpress user -->
+  <!-- 3) Force Botpress user = current email -->
   <script>
     const storedEmail = localStorage.getItem("helpdeskbot_email");
 
@@ -51,7 +52,11 @@
 
       function tryUpdate() {
         if (window.botpress && typeof window.botpress.updateUser === "function") {
+          if (typeof window.botpress.resetSession === "function") {
+            window.botpress.resetSession();
+          }
           window.botpress.updateUser({
+            externalId: email,
             data: { email: email }
           });
           clearInterval(intervalId);
