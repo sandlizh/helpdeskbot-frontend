@@ -17,6 +17,16 @@
       <section class="panel">
         <h2>My Prototype Chatbot</h2>
         <p>Ask the bot about Wi-Fi, VPN, passwords, or assignments.</p>
+
+        <!-- NEW: Connect Canvas link -->
+        <p style="margin-top:10px;">
+          <a href="connect-canvas.html">Connect Canvas (recommended)</a>
+        </p>
+
+        <!-- Optional: Logout -->
+        <p style="margin-top:6px;">
+          <a href="#" id="logout-link">Logout</a>
+        </p>
       </section>
     </main>
 
@@ -36,6 +46,17 @@
     const badge = document.getElementById("user-email");
     if (badge) {
       badge.textContent = "Logged in as: " + email;
+    }
+
+    // Logout
+    const logout = document.getElementById("logout-link");
+    if (logout) {
+      logout.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("helpdeskbot_email");
+        localStorage.removeItem("helpdeskbot_ical_url");
+        window.location.href = "index.html";
+      });
     }
   </script>
 
