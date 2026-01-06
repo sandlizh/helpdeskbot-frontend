@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connect Canvas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>Connect Canvas</h1>
+      <p id="user-email" class="user-badge"></p>
+    </header>
+
+    <main class="card">
+      <h2>Paste your Canvas Access Token</h2>
+      <p class="hint" style="margin-bottom:10px;">
+        Canvas → Account → Settings → <b>+ New Access Token</b> → Copy token → paste here.
+      </p>
+
+      <form id="canvas-form">
+        <label>Canvas Token</label>
+        <input id="token" type="password" required placeholder="Paste token here" />
+
+        <label>Confirm your password</label>
+        <input id="password" type="password" required placeholder="Your HelpDeskBot password" />
+
+        <button type="submit">Connect Canvas</button>
+      </form>
+
+      <p id="msg" class="error" style="display:none;"></p>
+
+      <p style="margin-top:12px; font-size:0.85rem;">
+        <a href="chatbot.html">Back to chatbot</a>
+      </p>
+    </main>
+
+    <footer class="footer">© 2025 HelpDeskBot</footer>
+  </div>
+
+  <script>
+    const API_BASE = "https://helpdeskbot-backend.onrender.com";
+    const email = localStorage.getItem("helpdeskbot_email");
+    if (!email) window.location.href = "index.html";
+
+    document.getElementById("user-email").textContent = "Logged in as: " + email;
+
+    const form = document.getElementById("canvas-form");
+    const msg = document.getElementById("msg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.style.display = "none";
+      msg.style.color = "red";
+
+      const canvas_token = document.getElementById("token").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        const res = await fetch(API_BASE + "/api/canvas/token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, canvas_token })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          msg.textContent = data.error || "Failed to connect Canvas";
+          msg.style.display = "block";
+          return;
+        }
+
+        msg.style.color = "green";
+        msg.textContent = "Canvas connected! Go back to the chatbot and ask for assignments.";
+        msg.style.display = "block";
+        form.reset();
+      } catch (err) {
+        msg.textContent = "Server connection error";
+        msg.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
