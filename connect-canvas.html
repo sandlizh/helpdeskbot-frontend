@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connect Canvas</title>
+  <title>Update Canvas Token</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="page">
     <header class="header">
-      <h1>Connect Canvas</h1>
+      <h1>Update Canvas Token</h1>
       <p id="user-email" class="user-badge"></p>
     </header>
 
@@ -22,11 +22,7 @@
       <form id="canvas-form">
         <label>Canvas Token</label>
         <input id="token" type="password" required placeholder="Paste token here" />
-
-        <label>Confirm your password</label>
-        <input id="password" type="password" required placeholder="Your HelpDeskBot password" />
-
-        <button type="submit">Connect Canvas</button>
+        <button type="submit">Save Token</button>
       </form>
 
       <p id="msg" class="error" style="display:none;"></p>
@@ -55,25 +51,24 @@
       msg.style.color = "red";
 
       const canvas_token = document.getElementById("token").value.trim();
-      const password = document.getElementById("password").value.trim();
 
       try {
         const res = await fetch(API_BASE + "/api/canvas/token", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, canvas_token })
+          body: JSON.stringify({ email, canvas_token })
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          msg.textContent = data.error || "Failed to connect Canvas";
+          msg.textContent = data.error || "Failed to save Canvas token";
           msg.style.display = "block";
           return;
         }
 
         msg.style.color = "green";
-        msg.textContent = "Canvas connected! Go back to the chatbot and ask for assignments.";
+        msg.textContent = "Canvas token saved! Go back to the chatbot and ask about assignments.";
         msg.style.display = "block";
         form.reset();
       } catch (err) {
