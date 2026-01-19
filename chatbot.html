@@ -3,39 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Helpdesk Chatbot</title>
+  <title>HelpDeskBot</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="page">
     <header class="header">
-      <h1>Helpdesk Chatbot</h1>
+      <h1>HelpDeskBot</h1>
       <p id="user-email" class="user-badge"></p>
     </header>
 
     <main class="main-chat">
       <section class="panel">
-        <h2>My Prototype Chatbot</h2>
-        <p>Ask the bot about Wi-Fi, VPN, passwords, or assignments.</p>
+        <h2>Chat with HelpDeskBot</h2>
+        <p>Ask about IT issues or your Canvas assignments.</p>
 
-        <!-- NEW: Connect Canvas link -->
         <p style="margin-top:10px;">
-          <a href="connect-canvas.html">Connect Canvas (recommended)</a>
-        </p>
-
-        <!-- Optional: Logout -->
-        <p style="margin-top:6px;">
           <a href="#" id="logout-link">Logout</a>
         </p>
       </section>
     </main>
 
     <footer class="footer">
-      © 2025 Helpdesk Chatbot
+      © 2025 HelpDeskBot
     </footer>
   </div>
 
-  <!-- 1) Read login info and protect the page -->
+  <!-- Auth guard + user badge -->
   <script>
     const email = localStorage.getItem("helpdeskbot_email");
 
@@ -48,23 +42,21 @@
       badge.textContent = "Logged in as: " + email;
     }
 
-    // Logout
     const logout = document.getElementById("logout-link");
     if (logout) {
       logout.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("helpdeskbot_email");
-        localStorage.removeItem("helpdeskbot_ical_url");
         window.location.href = "index.html";
       });
     }
   </script>
 
-  <!-- 2) Botpress webchat scripts -->
+  <!-- Botpress Webchat -->
   <script src="https://cdn.botpress.cloud/webchat/v3.4/inject.js"></script>
   <script src="https://files.bpcontent.cloud/2025/12/06/21/20251206213532-KGB6HISI.js" defer></script>
 
-  <!-- 3) Push email into Botpress user when webchat is ready -->
+  <!-- Push email into Botpress user context -->
   <script>
     const storedEmail = localStorage.getItem("helpdeskbot_email");
 
